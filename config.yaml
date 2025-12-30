@@ -1,0 +1,53 @@
+server:
+  listen_addr: ":10053"
+  upstream: "8.8.8.8:53"
+
+defaults:
+  # 没有加入用户组的用户默认使用 default 用户组
+  user_group: "default"
+
+users:
+  - name: "MyPC"
+    ips: ["192.168.31.102", "127.0.0.1"]
+    user_group: "family"
+
+user_groups:
+  - name: "default"
+    policies:
+      - rule_group: "default"
+
+  - name: "family"
+    policies:
+      - rule_group: "strict_ads"
+        # 在该时段内放行
+        schedule: "work_hours"
+      - rule_group: "default"
+        # No schedule = always blocked
+
+
+rule_groups:
+  - name: "strict_ads"
+    sources:
+      - name: "adguard_sample"
+        path: "rules.txt"
+  - name: "default"
+    sources:
+      - name: "Steven Black's List"
+        url: "https://adguardteam.github.io/HostlistsRegistry/assets/filter_33.txt"
+      - name: "AdGuard DNS filter"
+        url: "https://adguardteam.github.io/HostlistsRegistry/assets/filter_1.txt"
+      - name: "CHN: AdRules DNS List"
+        url: "https://adguardteam.github.io/HostlistsRegistry/assets/filter_29.txt"
+      - name: "CHN: anti-AD"
+        url: "https://adguardteam.github.io/HostlistsRegistry/assets/filter_21.txt"
+
+url_interval: 24h  # Global refresh interval for all URL sources
+
+
+schedules:
+  - name: "work_hours"
+    items:
+      - days: ["Mon", "Tue", "Wed", "Thu", "Fri"]
+        ranges: ["18:00-20:00"]
+      - days: ["Sat", "Sun"]
+        ranges: ["10:00-14:00"]

@@ -1,0 +1,15 @@
+# Sample AdGuard Rules
+
+||example.com^$denyallow=sub.example.com
+||doubleclick.net^
+@@||whitelist.example.com^
+1.2.3.4 bad.com
+/regex-test.*/
+
+||abc.example-test.com^$client=192.168.31.0/24,dnsrewrite=b.co
+||abc.example-test.com^$client=192.168.31.102,dnsrewrite=a.co
+
+||restricted.com^$client=MyPC
+mybad.*
+
+||example.org^$dnstype=CNAME|A
